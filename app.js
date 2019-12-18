@@ -31,7 +31,12 @@ const detected = (detectorName, value) => {
 
 const evaluate = (firstName, deltaNs) => {
   console.log(firstName, deltaNs + ' ns');
-  setTimeout(_=> {state = READY; console.log("ready")}, 2000 );
+  setTimeout(_=> {
+    state = READY;
+    firstEventDetector = null;
+    firstEventTimeNs = null;
+    console.log("ready")
+  }, 1000 );
 
 };
 
