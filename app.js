@@ -11,6 +11,14 @@ const RIGHT = 'right';
 let state = READY;
 let firstEventDetector = null;
 let firstEventTimeNs = null;
+let resetTimeout = null;
+
+const reset = () => {
+    state = READY;
+    firstEventDetector = null;
+    firstEventTimeNs = null;
+    console.log("ready")
+};
 
 const detected = (detectorName, value) => {
   if(state !== READY || value === 0) {
@@ -20,6 +28,7 @@ const detected = (detectorName, value) => {
   if(firstEventDetector === null) {
     firstEventDetector = detectorName;
     [,firstEventTimeNs] = process.hrtime();
+    resetTimeout = setTimeout(reset, 1000);
     return;
   }
   if(firstEventDetector !== detectorName) {
@@ -31,12 +40,8 @@ const detected = (detectorName, value) => {
 
 const evaluate = (firstName, deltaNs) => {
   console.log(firstName, deltaNs + ' ns');
-  setTimeout(_=> {
-    state = READY;
-    firstEventDetector = null;
-    firstEventTimeNs = null;
-    console.log("ready")
-  }, 1000 );
+  clearTimeout(resetTimeout);
+  resetTimeout = setTimeout(reset, 1000 );
 
 };
 
